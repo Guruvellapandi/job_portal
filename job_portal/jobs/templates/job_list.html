@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .job-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .job-item {
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            position: relative;
+        }
+        .apply-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+        .apply-button:hover {
+            background-color: #0056b3;
+        }
+        .job-details {
+            display: none;
+            margin-top: 10px;
+        }
+        .show-details {
+            cursor: pointer;
+            color: #007bff;
+        }
+        .show-details:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function toggleDetails(jobId) {
+            const details = document.getElementById(`details-${jobId}`);
+            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'job_list' %}">Job Listings</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'job_manage' %}">Manage Jobs</a>
+        <a href="{% url 'applied_jobs' %}">Applied Jobs</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <h1>Job Listings</h1>
+    <ul class="job-list">
+        {% for job in jobs %}
+            <li class="job-item">
+                <h2>{{ job.title }}</h2>
+                <p>{{ job.short_description }}</p>
+                <button class="show-details" onclick="toggleDetails({{ job.id }})">Toggle Details</button>
+                <a href="{% url 'apply_for_job' job.id %}" class="apply-button">Apply</a>
+                <div id="details-{{ job.id }}" class="job-details">
+                    <p><strong>Description:</strong> {{ job.description }}</p>
+                    <p><strong>Company:</strong> {{ job.company }}</p>
+                    <p><strong>Location:</strong> {{ job.location }}</p>
+                    <p><strong>Posted on:</strong> {{ job.posted_date }}</p>
+                    <p><strong>Job Type:</strong> {{ job.get_job_type_display }}</p>
+                    <p><strong>Domain:</strong> {{ job.domain }}</p>
+                </div>
+            </li>
+        {% empty %}
+            <li>No jobs available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

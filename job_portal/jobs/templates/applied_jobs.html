@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applied Jobs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .job-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .job-item {
+            margin-bottom: 10px;
+        }
+        .apply-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .apply-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'job_list' %}">Job Listings</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'job_manage' %}">Manage Jobs</a>
+        <a href="{% url 'applied_jobs' %}">Applied Jobs</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <h1>Applied Jobs</h1>
+
+    <form method="get" action="{% url 'applied_jobs' %}">
+        {{ form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    <ul class="job-list">
+        {% for application in applied_jobs %}
+            <li class="job-item">
+                <h2>{{ application.job.title }}</h2>
+                <p>{{ application.job.description }}</p>
+                <p>Applied on: {{ application.applied_on }}</p>
+            </li>
+        {% empty %}
+            <li>You have not applied for any jobs yet.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

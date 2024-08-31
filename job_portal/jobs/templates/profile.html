@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 20px;
+        }
+
+        nav {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        nav a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'job_list' %}">Job Listings</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        {% if request.user.is_superuser %}
+        <a href="{% url 'job_manage' %}">Manage Jobs</a>
+        <a href="{% url 'manage_users' %}">Manage Users</a>
+        {% endif %}
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    
+    <h1>Profile</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ profile_form.as_p }}
+
+        <!-- Remove Profile Picture Button -->
+        {% if user.userprofile.profile_picture %}
+            <button type="submit" name="remove_profile_picture" class="btn-danger">Remove Profile Picture</button>
+        {% endif %}
+
+        <!-- Remove Resume Button -->
+        {% if user.userprofile.resume %}
+            <button type="submit" name="remove_resume" class="btn-danger">Remove Resume</button>
+        {% endif %}
+
+        <input type="submit" value="Update Profile">
+    </form>
+
+    <h2>Delete Your Account</h2>
+    <form method="post" action="{% url 'delete_account' %}">
+        {% csrf_token %}
+        <input type="submit" value="Delete My Account" class="btn-danger">
+    </form>
+</body>
+</html>

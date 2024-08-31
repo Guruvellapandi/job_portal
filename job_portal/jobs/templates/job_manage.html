@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jobs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        nav {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        ul.job-list {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0;
+            list-style-type: none;
+        }
+        ul.job-list li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        ul.job-list li .job-info {
+            flex: 1;
+        }
+        ul.job-list li form {
+            margin: 0;
+        }
+        ul.job-list li input[type="submit"] {
+            background-color: #dc3545;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'job_list' %}">Job Listings</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'job_manage' %}">Manage Jobs</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <h1>Manage Jobs</h1>
+
+    <!-- Form to Add/Edit Jobs -->
+    <form method="post">
+        {% csrf_token %}
+        {{ job_form.as_p }}
+        <input type="submit" value="Save Job">
+    </form>
+
+    <!-- List of Existing Jobs with Delete Option -->
+    <ul class="job-list">
+        {% for job in jobs %}
+        <li>
+            <div class="job-info">
+                <strong>{{ job.title }}</strong> at {{ job.company }} ({{ job.get_job_type_display }})
+            </div>
+            <form method="post" onsubmit="return confirm('Are you sure you want to delete this job?');">
+                {% csrf_token %}
+                <input type="hidden" name="job_id" value="{{ job.id }}">
+                <input type="submit" name="delete_job" value="Delete">
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
